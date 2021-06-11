@@ -1,15 +1,8 @@
-# github.com/aaronland/go-aws-session v0.0.4
-github.com/aaronland/go-aws-session
-# github.com/aaronland/go-cloud-s3blob v0.1.0
-## explicit
-github.com/aaronland/go-cloud-s3blob
 # github.com/aaronland/go-http-server v0.0.6
 ## explicit
 github.com/aaronland/go-http-server
 # github.com/aaronland/go-roster v0.0.2
 github.com/aaronland/go-roster
-# github.com/aaronland/go-string v0.1.1
-github.com/aaronland/go-string/dsn
 # github.com/aws/aws-lambda-go v1.24.0
 ## explicit
 github.com/aws/aws-lambda-go/events
@@ -86,8 +79,6 @@ github.com/googleapis/gax-go/v2
 github.com/gorilla/feeds
 # github.com/jmespath/go-jmespath v0.4.0
 github.com/jmespath/go-jmespath
-# github.com/mmcdole/gofeed v1.1.3
-## explicit
 # github.com/sfomuseum/go-flags v0.8.2
 ## explicit
 github.com/sfomuseum/go-flags/flagset

@@ -1,22 +1,22 @@
 package main
 
 import (
-	_ "github.com/aaronland/go-cloud-s3blob"
 	_ "gocloud.dev/blob/fileblob"
+	_ "gocloud.dev/blob/s3blob"
 )
 
 import (
 	"context"
 	"fmt"
-	"github.com/aaronland/go-http-server"	
 	"github.com/aaronland/go-ftrain/wired"
+	"github.com/aaronland/go-http-server"
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/sfomuseum/go-flags/flagset"
 	"gocloud.dev/blob"
 	"io"
 	"log"
-	"os"
 	"net/http"
+	"os"
 )
 
 func main() {
@@ -33,7 +33,7 @@ func main() {
 	feed_name := fs.String("feed-name", "ftrain-wired.xml", "The filename of the RSS feed.")
 
 	server_uri := fs.String("server-uri", "http://localhost:8080", "A valid aaronland/go-http-server URI.")
-	
+
 	flagset.Parse(fs)
 
 	err := flagset.SetFlagsFromEnvVars(fs, "FTRAIN")
@@ -88,7 +88,7 @@ func main() {
 
 		switch *feed_type {
 		case "atom":
-		
+
 			f_atom, err := f.ToAtom()
 
 			if err != nil {
@@ -98,7 +98,7 @@ func main() {
 			f_enc = f_atom
 
 		case "rss":
-		
+
 			f_rss, err := f.ToRss()
 
 			if err != nil {
@@ -106,11 +106,11 @@ func main() {
 			}
 
 			f_enc = f_rss
-			
+
 		default:
 			// we've already validate feed type above
 		}
-		
+
 		if err != nil {
 			return fmt.Errorf("Failed to encode feed, %v", err)
 		}
@@ -126,7 +126,7 @@ func main() {
 
 	switch *mode {
 	case "cli":
-	
+
 		err := generate(ctx, wr)
 
 		if err != nil {
@@ -136,9 +136,9 @@ func main() {
 	case "lambda":
 
 		fn := func(ctx context.Context) error {
-		   return generate(ctx, wr)
+			return generate(ctx, wr)
 		}
-		
+
 		lambda.Start(fn)
 
 	case "server":
@@ -148,11 +148,11 @@ func main() {
 
 			content_type := fmt.Sprintf("application/%s+xml", *feed_type)
 			rsp.Header().Set("Content-type", content_type)
-			
+
 			err := generate(ctx, rsp)
 
 			if err != nil {
-			   http.Error(rsp, err.Error(), http.StatusInternalServerError)
+				http.Error(rsp, err.Error(), http.StatusInternalServerError)
 			}
 
 			return
@@ -162,11 +162,11 @@ func main() {
 
 		mux := http.NewServeMux()
 		mux.Handle("/", handler)
-		
+
 		s, err := server.NewServer(ctx, *server_uri)
 
 		if err != nil {
-		   	log.Fatalf("Failed to create new server, %v", err)
+			log.Fatalf("Failed to create new server, %v", err)
 		}
 
 		log.Printf("Listening on %s\n", s.Address())
@@ -174,9 +174,9 @@ func main() {
 		err = s.ListenAndServe(ctx, mux)
 
 		if err != nil {
-		   log.Fatalf("Failed to serve requests, %v", err)
+			log.Fatalf("Failed to serve requests, %v", err)
 		}
-		
+
 	default:
 		log.Fatalf("Invalid or unsupported mode")
 	}

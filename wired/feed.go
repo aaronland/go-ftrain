@@ -6,7 +6,7 @@ import (
 	"github.com/gorilla/feeds"
 	"golang.org/x/net/html"
 	"io"
-	_ "log"
+	"log"
 	"net/http"
 	"time"
 )
@@ -46,6 +46,7 @@ func GenerateFeedWithReader(ctx context.Context, r io.Reader, max_items int) (*f
 	is_link := false
 	title := ""
 	link := ""
+	date := ""
 	desc := ""
 
 	var f func(*html.Node)
@@ -81,19 +82,48 @@ func GenerateFeedWithReader(ctx context.Context, r io.Reader, max_items int) (*f
 			if n.Type == html.ElementNode && n.Data == "p" {
 				desc = n.FirstChild.Data
 			}
+
+			if n.Type == html.ElementNode && n.Data == "div" {
+
+				for _, a := range n.Attr {
+
+					switch a.Key {
+					case "class":
+
+						if a.Val == "summary-item__publish-date" {
+							date = n.FirstChild.Data
+							break
+						}
+					default:
+						// pass
+					}
+				}
+
+			}
+
 		}
 
-		if is_link && title != "" && link != "" && desc != "" {
+		if is_link && title != "" && link != "" && desc != "" && date != "" {
 
 			item_link := &feeds.Link{
 				Href: URL_WIRED + link,
 			}
-			
+
+			log.Println(date)
+
 			item := &feeds.Item{
 				Title:       title,
 				Link:        item_link,
 				Description: desc,
-				Id: URL_WIRED + link,
+				Id:          URL_WIRED + link,
+			}
+
+			t, err := time.Parse("01.02.2006 15:04 AM", date)
+
+			if err != nil {
+				log.Printf("Failed to parse date '%s' for %s, %v", date, link, err)
+			} else {
+				item.Created = t
 			}
 
 			items = append(items, item)
@@ -102,6 +132,7 @@ func GenerateFeedWithReader(ctx context.Context, r io.Reader, max_items int) (*f
 			title = ""
 			link = ""
 			desc = ""
+			date = ""
 		}
 
 		if max_items > 0 && len(items) == max_items {
@@ -126,10 +157,11 @@ func GenerateFeedWithReader(ctx context.Context, r io.Reader, max_items int) (*f
 	now := time.Now()
 
 	feed := &feeds.Feed{
-		Title:   "Paul Ford's WIRED essays",
-		Link:    feed_link,
-		Items:   items,
-		Created: now,
+		Title:       "Paul Ford's WIRED essays",
+		Description: "Paul Ford's WIRED essays",
+		Link:        feed_link,
+		Items:       items,
+		Created:     now,
 	}
 
 	return feed, nil
