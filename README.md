@@ -10,12 +10,12 @@ Go package for working with things related to Paul Ford.
 
 ```
 $> make cli
-go build -mod vendor -o bin/wired-rss-feed cmd/wired-rss-feed/main.go
+go build -mod vendor -o bin/wired-feed cmd/wired-feed/main.go
 ```
 
-### wired-rss-feed
+### wired-feed
 
-Generate an RSS feed of Paul Ford's WIRED essays.
+Generate an Atom or RSS feed of Paul Ford's WIRED essays.
 
 ```
 $> ./bin/wired-rss-feed -h
@@ -55,3 +55,4 @@ $> ./bin/wired-rss-feed | jq '.items[]["title"]'
 * https://ftrain.com/
 * https://gocloud.dev/howto/blob
 * https://github.com/aaronland/go-cloud-s3blob
+* https://github.com/gorilla/feeds
