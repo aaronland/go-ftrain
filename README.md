@@ -2,6 +2,10 @@
 
 Go package for working with things related to Paul Ford.
 
+## Documentation
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/aaronland/go-ftrain.svg)](https://pkg.go.dev/github.com/aaronland/go-ftrain)
+
 ## Tools
 
 ### wired-rss-feed

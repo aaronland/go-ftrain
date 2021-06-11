@@ -3,9 +3,9 @@ package wired
 import (
 	"bytes"
 	"context"
-	"testing"
 	"embed"
 	"fmt"
+	"testing"
 )
 
 //go:embed paul-ford.html
@@ -22,12 +22,12 @@ func TestRSSFeed(t *testing.T) {
 	}
 
 	r := bytes.NewReader(body)
-	
+
 	f, err := GenerateRSSFeedWithReader(ctx, r, 15)
 
 	if err != nil {
 		t.Fatalf("Failed to generate RSS feed with reader, %v", err)
 	}
-	
+
 	fmt.Println("FOO", f)
 }

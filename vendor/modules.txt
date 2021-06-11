@@ -5,6 +5,9 @@ github.com/mmcdole/gofeed/internal/shared
 github.com/mmcdole/gofeed/rss
 # github.com/mmcdole/goxpp v0.0.0-20181012175147-0068e33feabf
 github.com/mmcdole/goxpp
+# github.com/sfomuseum/go-flags v0.8.2
+## explicit
+github.com/sfomuseum/go-flags/flagset
 # golang.org/x/net v0.0.0-20210610132358-84b48f89b13b
 ## explicit
 golang.org/x/net/html

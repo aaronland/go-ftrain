@@ -2,18 +2,15 @@ package wired
 
 import (
 	"context"
-	"io"
+	"fmt"
 	"github.com/mmcdole/gofeed/rss"
 	"golang.org/x/net/html"
-	"fmt"
-	"net/http"
+	"io"
 	_ "log"
+	"net/http"
 )
 
-const URL_WIRED string = "https://www.wired.com"
-
-const URL_ESSAYS string = "https://www.wired.com/author/paul-ford/"
-
+// GenerateRSSFeed will create a mmcdole/gofeed/rss.Feed instance of Paul Ford's essays on the WIRED website. The number of items will be capped at 'max_items'. If 'max_item' is -1 then all the essays will be included.
 func GenerateRSSFeed(ctx context.Context, max_items int) (*rss.Feed, error) {
 
 	req, err := http.NewRequestWithContext(ctx, "GET", URL_ESSAYS, nil)
@@ -34,6 +31,7 @@ func GenerateRSSFeed(ctx context.Context, max_items int) (*rss.Feed, error) {
 	return GenerateRSSFeedWithReader(ctx, rsp.Body, max_items)
 }
 
+// GenerateRSSFeed will create a mmcdole/gofeed/rss.Feed instance of Paul Ford's essays included in the HTML document in 'r'. The number of items will be capped at 'max_items'. If 'max_item' is -1 then all the essays will be included.
 func GenerateRSSFeedWithReader(ctx context.Context, r io.Reader, max_items int) (*rss.Feed, error) {
 
 	doc, err := html.Parse(r)
@@ -45,10 +43,10 @@ func GenerateRSSFeedWithReader(ctx context.Context, r io.Reader, max_items int) 
 	items := make([]*rss.Item, 0)
 
 	is_link := false
-	title := ""	
+	title := ""
 	link := ""
 	desc := ""
-	
+
 	var f func(*html.Node)
 
 	f = func(n *html.Node) {
@@ -59,18 +57,18 @@ func GenerateRSSFeedWithReader(ctx context.Context, r io.Reader, max_items int) 
 
 				switch a.Key {
 				case "class":
-					
+
 					if a.Val == "summary-item-tracking__hed-link summary-item__hed-link" {
 						is_link = true
 					}
-					
+
 				case "href":
 					link = a.Val
 				default:
 					// pass
 				}
 			}
-			
+
 		}
 
 		if is_link {
@@ -87,8 +85,8 @@ func GenerateRSSFeedWithReader(ctx context.Context, r io.Reader, max_items int) 
 		if is_link && title != "" && link != "" && desc != "" {
 
 			item := &rss.Item{
-				Title: title,
-				Link: URL_WIRED + link,
+				Title:       title,
+				Link:        URL_WIRED + link,
 				Description: desc,
 			}
 
@@ -103,10 +101,10 @@ func GenerateRSSFeedWithReader(ctx context.Context, r io.Reader, max_items int) 
 		if max_items > 0 && len(items) == max_items {
 			return
 		}
-		
+
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			f(c)
-		}		
+		}
 	}
 
 	f(doc)
@@ -116,11 +114,11 @@ func GenerateRSSFeedWithReader(ctx context.Context, r io.Reader, max_items int) 
 	}
 
 	feed := &rss.Feed{
-		Title: "Paul Ford's WIRED essays",
-		Link: "https://www.wired.com/author/paul-ford/",
+		Title:   "Paul Ford's WIRED essays",
+		Link:    "https://www.wired.com/author/paul-ford/",
 		Version: "2.0",
-		Items: items,
+		Items:   items,
 	}
-	
+
 	return feed, nil
 }
