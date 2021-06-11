@@ -1,5 +1,7 @@
 # go-ftrain
 
+![](docs/images/go-ftrain.png)
+
 Go package for working with things related to Paul Ford.
 
 ## Documentation
