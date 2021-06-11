@@ -59,7 +59,8 @@ Command line options are set using environment variables. The rules for defining
 
 For example:
 
-| Name | Value |  
+| Name | Value |
+| --- | --- |
 | FTRAIN_MODE | lambda |
 | FTRAIN_MAX_ITEMS | 10 | 
 | FTRAIN_FEED_TYPE | atom |
