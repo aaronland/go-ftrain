@@ -88,11 +88,12 @@ func GenerateFeedWithReader(ctx context.Context, r io.Reader, max_items int) (*f
 			item_link := &feeds.Link{
 				Href: URL_WIRED + link,
 			}
-
+			
 			item := &feeds.Item{
 				Title:       title,
 				Link:        item_link,
 				Description: desc,
+				Id: URL_WIRED + link,
 			}
 
 			items = append(items, item)
