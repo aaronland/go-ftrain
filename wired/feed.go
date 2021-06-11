@@ -109,8 +109,6 @@ func GenerateFeedWithReader(ctx context.Context, r io.Reader, max_items int) (*f
 				Href: URL_WIRED + link,
 			}
 
-			log.Println(date)
-
 			item := &feeds.Item{
 				Title:       title,
 				Link:        item_link,
